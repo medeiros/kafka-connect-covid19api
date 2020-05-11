@@ -39,6 +39,8 @@ public class Covid19SourceTask extends SourceTask {
 
   @Override
   public List<SourceRecord> poll() throws InterruptedException {
+    log.info("Calling poll method");
+
     List<SourceRecord> records = new ArrayList<>();
 
     JSONArray countries = getCovid19APICountries();
