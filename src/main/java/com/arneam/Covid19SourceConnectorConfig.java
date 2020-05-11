@@ -7,7 +7,7 @@ import org.apache.kafka.common.config.ConfigDef;
 
 public class Covid19SourceConnectorConfig extends AbstractConfig {
 
-  public static final String TOPIC_CONFIG = "covid19.data";
+  public static final String TOPIC_CONFIG = "topic";
   private static final String TOPIC_DOC = "Topic to sore Covid19 API data";
 
   public final String topic;

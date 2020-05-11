@@ -1,12 +1,11 @@
-package com.arneam;
+package com.arneam.model;
 
 import org.junit.jupiter.api.Test;
 
-class Covid19SourceTaskTest {
+class CountryTest {
 
   @Test
   void test() {
   }
-
 
 }

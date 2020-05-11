@@ -99,11 +99,6 @@ public class Covid19SourceTask extends SourceTask {
         .put(Covid19Schema.DATE_FIELD, Date.from(country.getDate()));
   }
 
-  HttpResponse<JsonNode> getData() throws UnirestException {
-    GetRequest request = Unirest.get(COVID19API_ENDPOINT);
-    return request.asJson();
-  }
-
   @Override
   public void stop() {
 

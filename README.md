@@ -7,7 +7,7 @@ This is a source connector for Covid19 API.
 # Running in development
 
 
-The [docker-compose.yml](docker-compose.yml) that is included in this repository is based on the Confluent Platform Docker
+The [docker-compose.yml](docker-compose-old.yml) that is included in this repository is based on the Confluent Platform Docker
 images. Take a look at the [quickstart](http://docs.confluent.io/current/cp-docker-images/docs/quickstart.html#getting-started-with-docker-client)
 for the Docker images. 
 
