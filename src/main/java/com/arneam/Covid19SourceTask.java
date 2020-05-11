@@ -40,21 +40,22 @@ public class Covid19SourceTask extends SourceTask {
 
   @Override
   public List<SourceRecord> poll() throws InterruptedException {
-    log.info("Calling poll method...");
+    log.info("-----> Calling poll method...");
 
     if (timestamp != null) {
       if ((Instant.now().toEpochMilli() - timestamp) < config.pollIntervalMs) {
-        log.info("poll is already called. going to sleep for {} ms till next execution",
+        log.info("-----> poll is already called. going to sleep for {} ms till next execution",
             config.pollIntervalMs);
         Thread.sleep(config.pollIntervalMs);
-        log.info("poll wakened up");
+        log.info("-----> poll wakened up");
       }
     }
-    log.info("Executing poll method...");
+    log.info("-----> Executing poll method...");
 
     List<SourceRecord> records = new ArrayList<>();
 
     JSONArray countries = getCovid19APICountries();
+    log.info("-----> Total of countries: {}", countries.length());
 
     for (Object o : countries) {
       Country country = Country.fromJson((JSONObject) o);
@@ -62,7 +63,11 @@ public class Covid19SourceTask extends SourceTask {
       records.add(record);
     }
 
+    log.info("-----> Total of records added: {} ", records.size());
+
     this.timestamp = Instant.now().toEpochMilli();
+
+    log.info("-----> Timestamp: {}", timestamp);
 
     return records;
   }
