@@ -26,6 +26,7 @@ public class Covid19SourceTask extends SourceTask {
   private static Logger log = LoggerFactory.getLogger(Covid19SourceTask.class);
   private static String COVID19API_ENDPOINT = "https://api.covid19api.com/summary";
   private Covid19SourceConnectorConfig config;
+  private Long timestamp;
 
   @Override
   public String version() {
@@ -39,7 +40,17 @@ public class Covid19SourceTask extends SourceTask {
 
   @Override
   public List<SourceRecord> poll() throws InterruptedException {
-    log.info("Calling poll method");
+    log.info("Calling poll method...");
+
+    if (timestamp != null) {
+      if ((Instant.now().toEpochMilli() - timestamp) < config.pollIntervalMs) {
+        log.info("poll is already called. going to sleep for {} ms till next execution",
+            config.pollIntervalMs);
+        Thread.sleep(config.pollIntervalMs);
+        log.info("poll wakened up");
+      }
+    }
+    log.info("Executing poll method...");
 
     List<SourceRecord> records = new ArrayList<>();
 
@@ -50,6 +61,8 @@ public class Covid19SourceTask extends SourceTask {
       SourceRecord record = generateSourceRecordFrom(country);
       records.add(record);
     }
+
+    this.timestamp = Instant.now().toEpochMilli();
 
     return records;
   }
@@ -79,7 +92,7 @@ public class Covid19SourceTask extends SourceTask {
 
   private Map<String, String> sourceOffset(Instant date) {
     Map<String, String> map = new HashMap<>();
-    map.put(Covid19Schema.DATE_FIELD, date.toString());
+    map.put("timestamp", String.valueOf(Instant.now().toEpochMilli()));
     return map;
   }
 
