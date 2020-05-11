@@ -1,10 +1,17 @@
 package com.arneam.model;
 
-import static com.arneam.Covid19Schema.*;
+import static com.arneam.Covid19Schema.COUNTRY_CODE_FIELD;
+import static com.arneam.Covid19Schema.DATE_FIELD;
+import static com.arneam.Covid19Schema.NEW_CONFIRMED_FIELD;
+import static com.arneam.Covid19Schema.NEW_DEATHS_FIELD;
+import static com.arneam.Covid19Schema.NEW_RECOVERED_FIELD;
+import static com.arneam.Covid19Schema.SLUG_FIELD;
+import static com.arneam.Covid19Schema.TOTAL_CONFIRMED_FIELD;
+import static com.arneam.Covid19Schema.TOTAL_DEATHS_FIELD;
+import static com.arneam.Covid19Schema.TOTAL_RECOVERED_FIELD;
 
 import com.arneam.Covid19Schema;
 import java.time.Instant;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONObject;
