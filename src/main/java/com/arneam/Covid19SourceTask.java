@@ -58,7 +58,7 @@ public class Covid19SourceTask extends SourceTask {
 
     List<SourceRecord> records = new ArrayList<>();
 
-    JSONArray countries = getCovid19APICountries();
+    JSONArray countries = getCovid19APICountries(1);
     log.info("-----> Total of countries: {}", countries.length());
 
     return recordToTweet(records, countries);
@@ -166,15 +166,27 @@ public class Covid19SourceTask extends SourceTask {
     return records;
   }
 
-  JSONArray getCovid19APICountries() {
+  JSONArray getCovid19APICountries(int currentAttempt) {
     GetRequest request = Unirest.get(COVID19API_ENDPOINT);
     HttpResponse<JsonNode> jsonResponse;
     try {
-      jsonResponse = request.asJson();
-      return jsonResponse.getBody().getObject().getJSONArray("Countries");
-    } catch (UnirestException e) {
+      for (int i = currentAttempt; i <= 10; i++) { // try 10 times
+        jsonResponse = request.asJson();
+        if (jsonResponse.getStatus() == 200) {
+          log.info("-----> Covid19API: information gathered sucessfully");
+          return jsonResponse.getBody().getObject().getJSONArray("Countries");
+        } else if (jsonResponse.getStatus() == 429) { // HTTP 429: Too many requests
+          // try again in 1 second
+          log.warn("-----> Covid19API: 429 Too Many Requests; trying again in one second");
+          Thread.sleep(1000);
+        }
+      }
+    } catch (UnirestException | InterruptedException e) {
+      log.warn("-----> Exception when loading API data: ", e);
       return new JSONArray();
     }
+    log.warn("-----> Cannot get countries due to API issues");
+    return new JSONArray();
   }
 
   private SourceRecord generateSourceRecordFrom(Country country) {
