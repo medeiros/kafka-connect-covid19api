@@ -4,6 +4,8 @@
 
 This is a source connector for Covid19 API. 
 
+Created with https://github.com/jcustenborder/kafka-connect-archtype .
+
 # Running in development
 
 
