@@ -6,7 +6,6 @@ import org.apache.kafka.connect.data.Timestamp;
 
 public class Covid19Schema {
 
-  // countries
   public static final String COUNTRY_FIELD = "Country";
   public static final String COUNTRY_CODE_FIELD = "CountryCode";
   public static final String SLUG_FIELD = "Slug";
