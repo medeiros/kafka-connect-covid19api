@@ -16,7 +16,6 @@ class Covid19SourceTaskTest {
 
   @BeforeEach
   void init() {
-
     Country afghanistan = new Country();
     afghanistan.setCountry("Afghanistan");
     afghanistan.setNewConfirmed(369);
