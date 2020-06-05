@@ -12,17 +12,14 @@ import java.util.Map;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
 import org.apache.kafka.connect.source.SourceConnector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-@Description("This is a description of this connector and will show up in the documentation")
-@DocumentationImportant("This is a important information that will show up in the documentation.")
-@DocumentationTip("This is a tip that will show up in the documentation.")
-@Title("Super Source Connector") //This is the display name that will show up in the documentation.
-@DocumentationNote("This is a note that will show up in the documentation")
+@Description("Connect to Covid19API to get Covid19 data of all countries in the world")
+@DocumentationImportant("")
+@DocumentationTip("")
+@Title("Kafka-Connect-Covid19API")
+@DocumentationNote("Note: use it in conjunction with 'kafka-streams-covid19api' application")
 public class Covid19SourceConnector extends SourceConnector {
 
-  private static Logger log = LoggerFactory.getLogger(Covid19SourceConnector.class);
   private Covid19SourceConnectorConfig config;
 
   @Override
