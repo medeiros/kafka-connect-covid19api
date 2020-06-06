@@ -61,10 +61,10 @@ public class Covid19SourceTask extends SourceTask {
     JSONArray countries = getCovid19APICountries(1);
     log.info("-----> Total of countries: {}", countries.length());
 
-    return recordToTweet(records, countries);
+//    return recordToTweet(records, countries);
 
     //get back to this when kafka streams are working
-    //return recordsFromCountries(records, countries);
+    return recordsFromCountries(records, countries);
   }
 
   private List<SourceRecord> recordToTweet(List<SourceRecord> records, JSONArray jsonCountries) {
