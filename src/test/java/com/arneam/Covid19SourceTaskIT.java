@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  */
 public class Covid19SourceTaskIT {
 
-  public static final int EXPECTED_TOTAL_COUNTRIES = 185;
+  public static final int EXPECTED_TOTAL_COUNTRIES = 186;
   public static final String TOPIC_NAME = "covid-input";
   Covid19SourceTask task;
 
