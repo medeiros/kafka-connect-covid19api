@@ -24,6 +24,7 @@ public class Covid19Schema {
       .field(COUNTRY_CODE_FIELD, Schema.STRING_SCHEMA).build();
   public static final Schema VALUE_SCHEMA = SchemaBuilder.struct().name(SCHEMA_VALUE).version(2)
       .field(COUNTRY_FIELD, Schema.STRING_SCHEMA)
+      .field(COUNTRY_CODE_FIELD, Schema.STRING_SCHEMA)
       .field(SLUG_FIELD, Schema.STRING_SCHEMA)
       .field(NEW_CONFIRMED_FIELD, Schema.INT32_SCHEMA)
       .field(TOTAL_CONFIRMED_FIELD, Schema.INT32_SCHEMA)
@@ -31,7 +32,7 @@ public class Covid19Schema {
       .field(TOTAL_DEATHS_FIELD, Schema.INT32_SCHEMA)
       .field(NEW_RECOVERED_FIELD, Schema.INT32_SCHEMA)
       .field(TOTAL_RECOVERED_FIELD, Schema.INT32_SCHEMA)
-      .field(DATE_FIELD, Timestamp.SCHEMA)
+      .field(DATE_FIELD, Schema.STRING_SCHEMA)
       .build();
 
 }

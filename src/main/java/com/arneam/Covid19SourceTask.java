@@ -31,6 +31,7 @@ public class Covid19SourceTask extends SourceTask {
   private static String COVID19API_ENDPOINT = "https://api.covid19api.com/summary";
   private Covid19SourceConnectorConfig config;
   private Long timestamp;
+  private boolean sendDummy = false;
 
   @Override
   public String version() {
@@ -45,6 +46,17 @@ public class Covid19SourceTask extends SourceTask {
   @Override
   public List<SourceRecord> poll() throws InterruptedException {
     log.info("-----> Calling poll method...");
+
+    if (this.sendDummy) {
+      log.info("-----> generating dummy record");
+      Thread.sleep(15000);
+      Country dummyCountry = new Country();
+      SourceRecord record = generateSourceRecordFrom(dummyCountry);
+      List<SourceRecord> records = new ArrayList<>();
+      records.add(record);
+      this.sendDummy = false;
+      return records;
+    }
 
     if (timestamp != null) {
       if ((Instant.now().toEpochMilli() - timestamp) < config.pollIntervalMs) {
@@ -64,6 +76,7 @@ public class Covid19SourceTask extends SourceTask {
 //    return recordToTweet(records, countries);
 
     //get back to this when kafka streams are working
+    this.sendDummy = true;
     return recordsFromCountries(records, countries);
   }
 
@@ -91,7 +104,7 @@ public class Covid19SourceTask extends SourceTask {
     log.info("-----> Tweet to send: '{}'", tweet);
 
     records.add(
-        new SourceRecord(sourcePartition(), sourceOffset(null), config.topic,
+        new SourceRecord(sourcePartition(), sourceOffset(), config.topic,
             SchemaBuilder.string(), tweet));
 
     this.timestamp = Instant.now().toEpochMilli();
@@ -201,9 +214,9 @@ public class Covid19SourceTask extends SourceTask {
   }
 
   private SourceRecord generateSourceRecordFrom(Country country) {
-    return new SourceRecord(sourcePartition(), sourceOffset(country.getDate()), config.topic, null,
+    return new SourceRecord(sourcePartition(), sourceOffset(), config.topic, null,
         Covid19Schema.KEY_SCHEMA, buildRecordKey(country), Covid19Schema.VALUE_SCHEMA,
-        buildRecordValue(country), country.getDate().toEpochMilli());
+        buildRecordValue(country), Instant.parse(country.getDate()).toEpochMilli());
   }
 
   private Map<String, String> sourcePartition() {
@@ -212,7 +225,7 @@ public class Covid19SourceTask extends SourceTask {
     return map;
   }
 
-  private Map<String, String> sourceOffset(Instant date) {
+  private Map<String, String> sourceOffset() {
     Map<String, String> map = new HashMap<>();
     map.put("timestamp", String.valueOf(Instant.now().toEpochMilli()));
     return map;
@@ -226,6 +239,7 @@ public class Covid19SourceTask extends SourceTask {
   private Struct buildRecordValue(Country country) {
     return new Struct(Covid19Schema.VALUE_SCHEMA)
         .put(Covid19Schema.COUNTRY_FIELD, country.getCountry())
+        .put(Covid19Schema.COUNTRY_CODE_FIELD, country.getCountryCode())
         .put(Covid19Schema.SLUG_FIELD, country.getSlug())
         .put(Covid19Schema.NEW_CONFIRMED_FIELD, country.getNewConfirmed())
         .put(Covid19Schema.TOTAL_CONFIRMED_FIELD, country.getTotalConfirmed())
@@ -233,7 +247,7 @@ public class Covid19SourceTask extends SourceTask {
         .put(Covid19Schema.TOTAL_DEATHS_FIELD, country.getTotalDeaths())
         .put(Covid19Schema.NEW_RECOVERED_FIELD, country.getNewRecovered())
         .put(Covid19Schema.TOTAL_RECOVERED_FIELD, country.getTotalRecovered())
-        .put(Covid19Schema.DATE_FIELD, Date.from(country.getDate()));
+        .put(Covid19Schema.DATE_FIELD, country.getDate());
   }
 
   @Override

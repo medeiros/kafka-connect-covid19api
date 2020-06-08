@@ -54,7 +54,7 @@ class CountryTest {
     assertThat(country.getTotalDeaths(), is(equalTo(totalDeaths)));
     assertThat(country.getNewRecovered(), is(equalTo(newRecovered)));
     assertThat(country.getTotalRecovered(), is(equalTo(totalRecovered)));
-    assertThat(country.getDate(), is(equalTo(Instant.parse(date))));
+    assertThat(country.getDate(), is(equalTo(date)));
   }
 
 }
