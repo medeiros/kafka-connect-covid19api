@@ -1,13 +1,11 @@
-# Introduction
-
-## kafka-connect-covid19api
+# kafka-connect-covid19api
 
 This is a Kafka Source Connector for [Covid19 API](https://api.covid19api.com/summary). 
 
 Created with [jcustenborder Maven archetype](https://github.com/jcustenborder/kafka-connect-archtype).
 
 
-## Usage
+# Usage
 
 Use the following JSON document to register the connector into the Kafka Cluster: 
 
