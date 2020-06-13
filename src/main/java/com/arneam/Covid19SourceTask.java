@@ -11,7 +11,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +48,21 @@ public class Covid19SourceTask extends SourceTask {
 
     if (this.sendDummy) {
       log.info("-----> generating dummy record");
-      Thread.sleep(15000);
+//      Thread.sleep(15000);
       Country dummyCountry = new Country();
-      SourceRecord record = generateSourceRecordFrom(dummyCountry);
+      dummyCountry.setCountryCode("XX");
+      dummyCountry.setCountry("XX");
+      dummyCountry.setSlug("XX");
+      dummyCountry.setNewConfirmed(0);
+      dummyCountry.setTotalConfirmed(0);
+      dummyCountry.setNewDeaths(0);
+      dummyCountry.setTotalDeaths(0);
+      dummyCountry.setNewRecovered(0);
+      dummyCountry.setTotalRecovered(0);
+      dummyCountry.setDate(Country.truncateDateInDay(Instant.now().toString()));
+
+      log.info("-----> dummy record: {}", dummyCountry.toString());
+      SourceRecord record = generateDummySourceRecordFrom(dummyCountry);
       List<SourceRecord> records = new ArrayList<>();
       records.add(record);
       this.sendDummy = false;
@@ -219,6 +230,15 @@ public class Covid19SourceTask extends SourceTask {
         buildRecordValue(country), Instant.parse(country.getDate()).toEpochMilli());
   }
 
+  private SourceRecord generateDummySourceRecordFrom(Country country) {
+    int secondsBeyondSessionWindowLimit = 11;
+    return new SourceRecord(sourcePartition(), sourceOffset(), config.topic, null,
+        Covid19Schema.KEY_SCHEMA, buildRecordKey(country), Covid19Schema.VALUE_SCHEMA,
+        buildRecordValue(country),
+        Instant.parse(country.getDate()).plusSeconds(secondsBeyondSessionWindowLimit)
+            .toEpochMilli());
+  }
+
   private Map<String, String> sourcePartition() {
     Map<String, String> map = new HashMap<>();
     map.put("partition", "single");
@@ -233,7 +253,7 @@ public class Covid19SourceTask extends SourceTask {
 
   private Struct buildRecordKey(Country country) {
     return new Struct(Covid19Schema.KEY_SCHEMA)
-        .put(Covid19Schema.COUNTRY_CODE_FIELD, country.getCountryCode());
+        .put(Covid19Schema.DATE_FIELD, country.getDate());
   }
 
   private Struct buildRecordValue(Country country) {
