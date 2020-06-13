@@ -50,7 +50,7 @@ public class MyKeyValueTransformation<R extends ConnectRecord<R>> extends BaseKe
 
   /**
    * This implementation works against the key of the record.
-   * @param <R>
+   * @param <R> no description
    */
   public static class Key<R extends ConnectRecord<R>> extends MyKeyValueTransformation<R> {
     public Key() {
@@ -60,7 +60,7 @@ public class MyKeyValueTransformation<R extends ConnectRecord<R>> extends BaseKe
 
   /**
    * This implementation works against the value of the record.
-   * @param <R>
+   * @param <R> no description
    */
   public static class Value<R extends ConnectRecord<R>> extends MyKeyValueTransformation<R> {
     public Value() {
