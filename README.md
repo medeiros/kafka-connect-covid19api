@@ -2,48 +2,27 @@
 
 ## kafka-connect-covid19api
 
-This is a source connector for Covid19 API. 
+This is a Kafka Source Connector for [Covid19 API](https://api.covid19api.com/summary). 
 
-Created with https://github.com/jcustenborder/kafka-connect-archtype .
-
-# Running in development
+Created with [jcustenborder Maven archetype](https://github.com/jcustenborder/kafka-connect-archtype).
 
 
-The [docker-compose.yml](docker-compose-old.yml) that is included in this repository is based on the Confluent Platform Docker
-images. Take a look at the [quickstart](http://docs.confluent.io/current/cp-docker-images/docs/quickstart.html#getting-started-with-docker-client)
-for the Docker images. 
+## Usage
 
-Your development workstation needs to be able to resolve the hostnames that are listed in the `docker-compose.yml` 
-file in the root of this repository. If you are using [Docker for Mac](https://docs.docker.com/v17.12/docker-for-mac/install/)
-your containers will be available at the ip address `127.0.0.1`. If you are running docker-machine
-you will need to determine the ip address of the virtual machine with `docker-machine ip confluent`
-to determine the ip address.
+Use the following JSON document to register the connector into the Kafka Cluster: 
 
-```
-127.0.0.1 zookeeper
-127.0.0.1 kafka
-127.0.0.1 schema-registry
+```json
+{
+	"name": "kafka-connect-covid19api", 
+	"config": {
+		"connector.class": "com.arneam.Covid19SourceConnector",
+		"topic": "covid-input"
+	}
+}
 ```
 
+The cURL command to register the JSON (as a file) follows:
 
-```
-docker-compose up -d
-```
-
-
-The debug script assumes that `connect-standalone` is in the path on your local workstation. Download 
-the latest version of the [Kafka](https://www.confluent.io/download/) to get started.
-
-
-Start the connector with debugging enabled.
- 
-```
-./bin/debug.sh
-```
-
-Start the connector with debugging enabled. This will wait for a debugger to attach.
-
-```
-export SUSPEND='y'
-./bin/debug.sh
+```bash
+curl -X POST -d@'<file.json>' -H "Content-type: application/json" localhost:8084
 ```
