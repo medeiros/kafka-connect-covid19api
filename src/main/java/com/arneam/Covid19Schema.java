@@ -21,7 +21,7 @@ public class Covid19Schema {
   public static final String SCHEMA_VALUE = "com.arneam.covid19.CountryValue";
 
   public static final Schema KEY_SCHEMA = SchemaBuilder.struct().name(SCHEMA_KEY).version(1)
-      .field(COUNTRY_CODE_FIELD, Schema.STRING_SCHEMA).build();
+      .field(DATE_FIELD, Schema.STRING_SCHEMA).build();
   public static final Schema VALUE_SCHEMA = SchemaBuilder.struct().name(SCHEMA_VALUE).version(2)
       .field(COUNTRY_FIELD, Schema.STRING_SCHEMA)
       .field(COUNTRY_CODE_FIELD, Schema.STRING_SCHEMA)

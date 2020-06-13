@@ -11,12 +11,16 @@ import static com.arneam.Covid19Schema.TOTAL_DEATHS_FIELD;
 import static com.arneam.Covid19Schema.TOTAL_RECOVERED_FIELD;
 
 import com.arneam.Covid19Schema;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.json.JSONObject;
 
 @Getter
 @Setter
+@ToString
 public class Country {
 
   private String country;
@@ -41,8 +45,12 @@ public class Country {
     country.setTotalDeaths(jsonObject.getInt(TOTAL_DEATHS_FIELD));
     country.setNewRecovered(jsonObject.getInt(NEW_RECOVERED_FIELD));
     country.setTotalRecovered(jsonObject.getInt(TOTAL_RECOVERED_FIELD));
-    country.setDate(jsonObject.getString(DATE_FIELD));
+    country.setDate(truncateDateInDay(jsonObject.getString(DATE_FIELD)));
     return country;
+  }
+
+  public static String truncateDateInDay(String date) {
+    return Instant.parse(date).truncatedTo(ChronoUnit.DAYS).toString();
   }
 
 }

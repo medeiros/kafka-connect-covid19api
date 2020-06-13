@@ -16,7 +16,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -54,7 +56,13 @@ class CountryTest {
     assertThat(country.getTotalDeaths(), is(equalTo(totalDeaths)));
     assertThat(country.getNewRecovered(), is(equalTo(newRecovered)));
     assertThat(country.getTotalRecovered(), is(equalTo(totalRecovered)));
-    assertThat(country.getDate(), is(equalTo(date)));
+    assertThat(country.getDate(), is(equalTo("2020-02-02T00:00:00Z")));
+  }
+
+  @Test
+  void shoudlTruncateDate() {
+    String truncatedDate = Country.truncateDateInDay(Instant.now().toString());
+    assertThat(truncatedDate, is(equalTo(Instant.now().truncatedTo(ChronoUnit.DAYS).toString())));
   }
 
 }
