@@ -9,13 +9,9 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
@@ -48,7 +44,6 @@ public class Covid19SourceTask extends SourceTask {
 
     if (this.sendDummy) {
       log.info("-----> generating dummy record");
-//      Thread.sleep(15000);
       Country dummyCountry = new Country();
       dummyCountry.setCountryCode("XX");
       dummyCountry.setCountry("XX");
@@ -84,94 +79,8 @@ public class Covid19SourceTask extends SourceTask {
     JSONArray countries = getCovid19APICountries(1);
     log.info("-----> Total of countries: {}", countries.length());
 
-//    return recordToTweet(records, countries);
-
-    //get back to this when kafka streams are working
     this.sendDummy = true;
     return recordsFromCountries(records, countries);
-  }
-
-  private List<SourceRecord> recordToTweet(List<SourceRecord> records, JSONArray jsonCountries) {
-
-    List<Country> countries = new ArrayList<>();
-    for (Object o : jsonCountries) {
-      countries.add(Country.fromJson((JSONObject) o));
-    }
-
-    int brazilRankingNewConfirmed = brazilRankindNewConfirmed(countries);
-    int brazilRankingTotalConfirmed = brazilRankindTotalConfirmed(countries);
-    int brazilRankingNewDeaths = brazilRankindNewDeaths(countries);
-    int brazilRankingTotalDeaths = brazilRankindTotalDeaths(countries);
-    int brazilRankingNewRecovered = brazilRankindNewRecovered(countries);
-    int brazilRankingTotalRecovered = brazilRankindTotalRecovered(countries);
-
-    String tweet = String
-        .format("Ranking Covid19 do Brasil no mundo: %so. em novos casos confirmados; %so. em "
-                + "total de casos confirmados; %so. em novas mortes; %so. em total de mortes; "
-                + "%so. em novos casos recuperados; %so. em total de casos recuperados.",
-            brazilRankingNewConfirmed, brazilRankingTotalConfirmed, brazilRankingNewDeaths,
-            brazilRankingTotalDeaths, brazilRankingNewRecovered, brazilRankingTotalRecovered);
-
-    log.info("-----> Tweet to send: '{}'", tweet);
-
-    records.add(
-        new SourceRecord(sourcePartition(), sourceOffset(), config.topic,
-            SchemaBuilder.string(), tweet));
-
-    this.timestamp = Instant.now().toEpochMilli();
-
-    log.info("-----> Timestamp: {}", timestamp);
-
-    return records;
-
-  }
-
-  int brazilRankindNewConfirmed(List<Country> countries) {
-    Collections.sort(countries,
-        Collections.reverseOrder(Comparator.comparingInt(Country::getNewConfirmed)));
-    Optional<Country> brazil = countries.stream()
-        .filter(country -> country.getCountry().equals("Brazil")).findFirst();
-    return countries.indexOf(brazil.get()) + 1;
-  }
-
-  int brazilRankindTotalConfirmed(List<Country> countries) {
-    Collections.sort(countries,
-        Collections.reverseOrder(Comparator.comparingInt(Country::getTotalConfirmed)));
-    Optional<Country> brazil = countries.stream()
-        .filter(country -> country.getCountry().equals("Brazil")).findFirst();
-    return countries.indexOf(brazil.get()) + 1;
-  }
-
-  int brazilRankindNewDeaths(List<Country> countries) {
-    Collections
-        .sort(countries, Collections.reverseOrder(Comparator.comparingInt(Country::getNewDeaths)));
-    Optional<Country> brazil = countries.stream()
-        .filter(country -> country.getCountry().equals("Brazil")).findFirst();
-    return countries.indexOf(brazil.get()) + 1;
-  }
-
-  int brazilRankindTotalDeaths(List<Country> countries) {
-    Collections.sort(countries,
-        Collections.reverseOrder(Comparator.comparingInt(Country::getTotalDeaths)));
-    Optional<Country> brazil = countries.stream()
-        .filter(country -> country.getCountry().equals("Brazil")).findFirst();
-    return countries.indexOf(brazil.get()) + 1;
-  }
-
-  int brazilRankindNewRecovered(List<Country> countries) {
-    Collections.sort(countries,
-        Collections.reverseOrder(Comparator.comparingInt(Country::getNewRecovered)));
-    Optional<Country> brazil = countries.stream()
-        .filter(country -> country.getCountry().equals("Brazil")).findFirst();
-    return countries.indexOf(brazil.get()) + 1;
-  }
-
-  int brazilRankindTotalRecovered(List<Country> countries) {
-    Collections.sort(countries,
-        Collections.reverseOrder(Comparator.comparingInt(Country::getTotalRecovered)));
-    Optional<Country> brazil = countries.stream()
-        .filter(country -> country.getCountry().equals("Brazil")).findFirst();
-    return countries.indexOf(brazil.get()) + 1;
   }
 
   private List<SourceRecord> recordsFromCountries(List<SourceRecord> records, JSONArray countries) {
@@ -180,11 +89,9 @@ public class Covid19SourceTask extends SourceTask {
       SourceRecord record = generateSourceRecordFrom(country);
       records.add(record);
     }
-
     log.info("-----> Total of records added: {} ", records.size());
 
     this.timestamp = Instant.now().toEpochMilli();
-
     log.info("-----> Timestamp: {}", timestamp);
 
     return records;
@@ -274,4 +181,5 @@ public class Covid19SourceTask extends SourceTask {
   public void stop() {
 
   }
+
 }
