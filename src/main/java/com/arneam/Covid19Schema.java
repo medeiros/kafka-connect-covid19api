@@ -2,7 +2,6 @@ package com.arneam;
 
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
-import org.apache.kafka.connect.data.Timestamp;
 
 public class Covid19Schema {
 
