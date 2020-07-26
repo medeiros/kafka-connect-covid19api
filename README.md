@@ -22,7 +22,7 @@ Use the following JSON document to register the connector in Kafka Cluster:
 The cURL command to register the JSON (as a file) follows:
 
 ```bash
-curl -X POST -d@'<file.json>' -H "Content-type: application/json" localhost:8084
+curl -X POST -d@'<file.json>' -H "Content-type: application/json" localhost:8084/connectors | jq
 ```
 
 ## Appendix: Twitter registration
